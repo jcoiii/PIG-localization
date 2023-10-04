@@ -1,0 +1,39 @@
+%% Theoretical Simulation with Transfer Function and Kalman Filter
+
+num = [1]; 
+den = [1 3 2]; 
+H = tf(num, den);
+H_ss = ss(H);
+[A, B, C, D] = ssdata(H_ss);
+
+R = 0.1;  % measurement noise cov
+Q = 0.1; % process noise cov
+P = 1;    
+x_est = zeros(2, 1);  
+t = 0:0.01:10;
+
+true_position = sin(t);
+Z_true = lsim(H, true_position, t); 
+Z_meas = Z_true + sqrt(R)*randn(size(Z_true)); 
+estimated_position = zeros(size(true_position));
+
+% KF
+for k = 2:length(t)
+    x_pred = A * x_est(:, k-1); 
+    P_pred = A * P * A' + Q;   
+    K = P_pred * C' / (C * P_pred * C' + R); % Gain
+    x_est(:, k) = x_pred + K * (Z_meas(k) - C * x_pred); 
+    P = (1 - K * C) * P_pred; 
+
+
+    estimated_position(k) = x_est(1, k);
+end
+
+plot(t, true_position, 'g', 'LineWidth', 1.5); hold on;
+plot(t, Z_meas, 'b', 'LineWidth', 1.5);
+plot(t, estimated_position, 'r', 'LineWidth', 1.5);
+legend('True Position', 'Measured Impedance', 'Estimated Position');
+xlabel('Time');
+ylabel('Position/Impedance');
+title('Position and Impedance Estimation with KF');
+grid on;
