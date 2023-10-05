@@ -2,7 +2,7 @@
 
 % Define Transfer Function H(s) = num(s)/den(s)
 num = [1]; 
-den = [1 3 2]; 
+den = [1 1 1]; 
 H = tf(num, den);
 
 % Convert to State-Space Representation

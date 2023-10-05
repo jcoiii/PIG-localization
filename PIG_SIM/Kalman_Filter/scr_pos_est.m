@@ -1,6 +1,6 @@
 a = 1;  b = 0;  % linear coef
 R = 0.1;  % measurement nc
-Q = 0.01; % process nc
+Q = 0.1; % process nc
 P = 1;    % initial estimate of position uncertainty
 pos_est = 0;   % initial position estimate
 
